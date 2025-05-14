@@ -8,75 +8,56 @@ This file implements a lightweight client wrapper around the official Bybit SDK 
 - Expose a simplified, testable method for retrieving candlestick (kline) data
 - Prepare a base for extending trading and market operations
 
-It allows toggle between live and testnet environments and returns typed deserialized results from the Bybit API.
+The client automatically read the Bybit configuration from `ICFonfiguration` via DI.
+
 
 ---
 
-## üî¢ Technical Implementation
+## ‚Üì Technical Implementation
 
-### ‚Üì Namespace
+### Namespace
 
 `charp
 namespace Axi.Bybit
 c`
-J
-### ‚Üì Dependencies
 
-The class uses the following SDK and framework namespaces:
+### Dependencies
 
 - `bybit.net.api.ApiServiceImp`
 - `bybit.net.api.Models`
-- `bybit.net.api.Models.Market`
-- `Newtonsoft.Json`
+- `Microsoft.Extensions.Configuration`
+- `newtonsoft.json`
 
-### ‚Üì Class: `BybitClient`
+### Class: `BybitClient`
+Responsible for wrapping Bybit services.
 
-a  public class that encapsulates the SDK services for:
+Privately initializes:
 
-- ** Market data (`_market`) via `BybitMarketDataService`
-- **Trade operations (`_trade`) via `BybitTradeService`
+- BybitMarketDataService for reading kline data
+- BybitTradeService for trading orders
 
-### Constructor
+Environment values is retrieved from `Microsoft.Extensions.Configuration`:
 
-``charp
-public BybitClient(string apiKey, string apiSecret, bool useTestnet)
-```
+- BYRBIT_API_KEY
+ - BYRBIT_API_SECRET
+ - BYRBIT_USE_TESTNET
 
-Initializes both the market and trade service instances with API credentials and environment mode:
-
-- `apiKey`: Public API key from Bybit
-- `apiSecret`: Corresponding secret key
-- `useTestnet`: Boolean flag to toggle between live and testnet endpoints
-
-The services are configured with `debugMode` set according to the `useTestnet` flag.
+Structure: singleton di component without external resources.
 
 ### Method: `GetKlinesAsync`
 
-`charp
-public async Task<List<KlineDto>> GetKlinesAsync(string symbol, MarketInterval interval, int limit)
+``csharp
+public async Task<List<KlineDto>> GetKlines@≥ync(string symbol, MarketInterval interval, int limit)
 ```
 
-This method fetches historical candlestick (kLine) data for a specified symbol and time interval:
+Retrieves candlestick data for specified trading pair and interval.
 
-- `symbol`: Trading pair (e.g. `BTCUSDT`)
-- `interval`: Enum indicating the granularity of each kline (e.g., 1m, 5m, 1h)
-- `limit`: Maximum number of klines to retrieve
+Uses `Category.SOT`as market type.
 
-Returns: `List<KlineDto>` ‚Äú typed DTOs representing each kline entry.
+Returns: `list<KlineDto>` or empty list if no response.
 
-Implementation Notes:
-- Uses `GetMarketKline` from `_market`
-- Converts raw JSON to `KlineListDto` and extracts `.Klines`
-- Returns an empty list on null response
+## ‡üìù Future Extensions
 
-### üí´ Testability
-
-- Internally decouples market and trade service usage
-- Exposes simple methods for mocking during unit tests
-- Configurable environment for development vs production
-
-### üìù Future Extensions
-
-- Add `PlaceOrderAsync(...)` for executing market orders
-- Support more endpoints (e.g., order book, account info)
-- Centralize error handling and logging
+- Document interfaces if needed
+- Add more methods with trading actions
+- Centralize error handling and exception management
