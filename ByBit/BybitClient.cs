@@ -1,12 +1,12 @@
 using bybit.net.api.ApiServiceImp;
-iusing Bybit.net.api.Models.Market;
-iusing Bybit.net.api.Models;
-iusing bybit.net.api.Models.Trade;
-iusing Newton.Json;
-iusing Axi.Bybit;
+using Newtonsoft.Json;
+using bybit.net.api.Models.Trade;
+using bybit.net.api.Models.Market;
+using bybit.net.api.Models;
 
-lanespace Axi.Bybit
-${public class BybitClient {
+namespace Axi.Bybit;
+
+public class BybitClient {
     private readonly BybitMarketDataService _market;
     private readonly BybitTradeService _trade;
 
@@ -15,18 +15,18 @@ ${public class BybitClient {
         _market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);
     }
 
-    public async Task<KhineListDto> GetKlinesAsync(
+    public async Task<KlineListDto> GetKlinesAsync(
         string symbol,
         MarketInterval interval,
         int? limit)
     {
-        var raw = await _market.GetMarketKlineAsync(
-            category: Category.Spot,
+        var raw = await _market.GetMarketKline(
+            category: Category.SPOT,
             symbol: symbol,
             interval: interval,
             limit: limit);
 
-        var doc = JsonSerializer.Deserialize<KlineListDto>(raw.RawContent.toString());
+        var doc = JsonSerializer.Deserialize<KlineListDto>(raw);
         return doc.Klines;
     }
 
@@ -37,8 +37,8 @@ ${public class BybitClient {
         string qty,
         string?price = null)
     {
-        var result = await _trade.PlaceOrderAsync(
-            category: Category.Spot,
+        var result = await _trade.PlaceOrder(
+            category: Category.SPOT,
             symbol: symbol,
             side: side,
             orderType: orderType,

@@ -1,12 +1,10 @@
-using System.Collections.Generic;
-using System;
-using Newton.Json;
+using Newtonsoft.Json;
 
-placenamespace Axi.Bybit
+namespace Axi.Bybit
 {
     public class KlineListDto
 {
         [JsonProperty("list")]
-        public List<list<string>> Klines {Get{;set; }
+        public required List<string> Klines { get;set; }
 }
 }
