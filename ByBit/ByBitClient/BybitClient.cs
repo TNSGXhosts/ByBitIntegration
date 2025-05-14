@@ -1,16 +1,18 @@
 using bybit.net.api.ApiServiceImp;
+using bybit.net.api.Models;
 using bybit.net.api.Models.Market;
-using BybitModels.Trading;
-using Microsoft.Extensions.Options;using Newtonsoft.Json;
-using System.Text;
-namespace Bybit.BybitClient
+using BybitModels;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+
+namespace Bybit.BybitClient
 {
     public class BybitClient : IBybitClient
     {
         private readonly BybitMarketDataService _market;
         private readonly BybitTradeService _trade;
 
-        public BybitClient(IOptions<Settings> options)
+        public BybitClient(IOptions<BybitSettings> options)
         {
             var apiKey = options.Value.ApiKey;
             var apiSecret = options.Value.SecretKey;
@@ -23,16 +25,17 @@ using System.Text;
             _market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);
         }
 
-        public async Task<PlaceOrderResult> PlaceOrderAsync(string symbol, string side, string orderType, decimal qty)
+        public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int limit)
         {
-            var responseString = await _trade.PlaceOrder(symbol, side, orderType, qty);
-            
-            var response = JSON.Document.DeserializeObject(responseString);
-            var result = response;.get_Property("result");
+            var response = await _market.GetMarketKline(Category.SPOT, symbol, interval, limit);
 
-            return result?.ToObject().ToString()
-                                          .Let(UnicodeCompareson.ToOuterInverionType())
-                                             _> Typeof(PlaceOrderResult);
+            if (response != null)
+            {
+                var responseObject = JsonConvert.DeserializeObject<KlineList>(response);
+                return responseObject?.Klines ?? new List<Kline>();
+            }
+
+            return [];
         }
     }
 }
