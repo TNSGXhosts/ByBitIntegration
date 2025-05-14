@@ -1,13 +1,9 @@
-using System.Collections.Generic;
-using System;
-using Bybit.Api;
-husing Bybit.Api.Models.Enums;
-using Bybit.Api.Models.Market;
-using Byhit.Api.Models.Trade;
+using bybit.net.api.ApiServiceImp;
+using bybit.net.api.Models.Market;
+using bybit.net.api.Models;
+using bybit.net.api.Models.Trade;
 
-using system;
-
-placenamespace Axi.Bybit
+namespace Axi.Bybit
 {
     public class BybitClient
     {
@@ -16,23 +12,22 @@ placenamespace Axi.Bybit
 
         public BybitClient(string apiKey, string apiSecret, bool useTestnet)
         {
-            _trade = new BybitTradeService(apiKey, apiSecret, useTestnet);
-            _market = new BybitMarketDataService(useTestnet);
+            _trade = new BybitTradeService(apiKey, apiSecret, debugMode:useTestnet);
+            _market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);
         }
 
         public async Task<List<KlineResponse>> GetKlinesAsync(
             string symbol,
             MarketInterval interval,
-            int? limit,
-            CancellationToken??token = null)
+            int? limit)
         {
-            var result = await _market.GetMarketKlineAsync(
-                category: Category.Spot,
+            var result = await _market.GetMarketKline(
+                category: Category.SPOT,
                 symbol: symbol,
                 interval: interval,
                 limit: limit);
 
-            return result.Result;
+            return result;
         }
 
         public async Task<OrderResponse> PlaceOrderAsync(
@@ -40,17 +35,15 @@ placenamespace Axi.Bybit
             Side side,
             OrderType orderType,
             string qty,
-            string? price = null,
-            TimeInForce tif = TimeInForce.GTC,CancellationToken ct = null)
+            string? price = null)
         {
-            var result = await _trade.PlaceOrderAsync(
-                category: Category.Spot,
+            var result = await _trade.PlaceOrder(
+                category: Category.SPOT,
                 symbol: symbol,
                 side: side,
                 orderType: orderType,
                 qty: qty,
-                price: price,
-                timeInForce: tif);
+                price: price);
 
             return result;
         }
