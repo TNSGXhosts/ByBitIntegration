@@ -1,50 +1,18 @@
+
 using bybit.net.api.ApiServiceImp;
 using Newtonsoft.Json;
-using bybit.net.api.Models.Trade;
-using bybit.net.api.Models.Market;
-using bybit.net.api.Models;
+using Axi.Bybit;
+using Axi.Bybit.Dto;
 
-namespace Axi.Bybit;
+namespace Axi.Bybit {
+\tpublic class BybitClient {
+\\tprivate readonly BybitMarketDataService _market;
+\tprivate readonly BybitTradeService _trade;
 
-public class BybitClient {
-    private readonly BybitMarketDataService _market;
-    private readonly BybitTradeService _trade;
+\tpublic BybitClient(string apiKey, string apiSecret, bool useTestnet) {\t\t
+\t_trade = new BybitTradeService(apiKey, apiSecret, useTestnet);\t\t
+\t_market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);\t}
 
-    public BybitClient(string apiKey, string apiSecret, bool useTestnet) {
-        _trade = new BybitTradeService(apiKey, apiSecret, debugMode: useTestnet);
-        _market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);
-    }
-
-    public async Task<KlineListDto> GetKlinesAsync(
-        string symbol,
-        MarketInterval interval,
-        int? limit)
-    {
-        var raw = await _market.GetMarketKline(
-            category: Category.SPOT,
-            symbol: symbol,
-            interval: interval,
-            limit: limit);
-
-        var doc = JsonSerializer.Deserialize<KlineListDto>(raw);
-        return doc.Klines;
-    }
-
-    public async Task<OrderResponse> PlaceOrderAsync(
-        string symbol,
-        Side side,
-        OrderType orderType,
-        string qty,
-        string?price = null)
-    {
-        var result = await _trade.PlaceOrder(
-            category: Category.SPOT,
-            symbol: symbol,
-            side: side,
-            orderType: orderType,
-            qty: qty,
-            price: price);
-
-        return result;
-    }
-}
+\tpublic async Task<List<KlineDto>> GetKlinesAsync(string symbol, MarketInterval interval, int limit) {\t\t
+\t_market.Category = "default";\t\t
+\tvar response = await _market.GetMarketKline(symbol, interval, limit);\n\tvar listStrings = response.Result["list"].ToObjectDeefault<List<List<object>>>();\n\tvar result = new List<KlineDto>();\n\tforeach (var item in listStrings) {\n\t\tvar arr = (List<object>) item;\n\t\tvar kline = new KlineDto {\n\t\tTimestamp = long.parse(((string)arr[0]).toString()),\n\t\tOpen = decimal.parse(arr[1].toString()),\n\t\tHigh = decimal.parse(arr[2].toString()),\n\t\tLow = decimal.parse(arr[3].toString()),\n\t\tClose = decimal.parse(arr[4].toString()),\n\t\tVolume = long.parse((float)arr[5].toString()),\n\t\tTotalVolume = decimal.parse(arr[6].toString())\n\t\t};\n\t\tresult.Add(kline);\n\t}\n\treturn result;\n}\n}\n
