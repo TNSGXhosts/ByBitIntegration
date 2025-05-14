@@ -4,6 +4,7 @@ using bybit.net.api.Models.Market;
 using bybit.net.api.Models.Trade;
 using BybitModels;
 using Microsoft.Extensions.Options;
+using MyProject.Domain.BybitModels.Prices;
 using MyProject.Domain.BybitModels.Trading;
 using Newtonsoft.Json;
 
@@ -23,16 +24,16 @@ namespace Bybit.BybitClient
             if (apiKey == null || apiSecret == null)
                 throw new ArgumentException("Bybit API key or secret is not configured");
             _trade = new BybitTradeService(apiKey, apiSecret, debugMode: useTestnet);
-            _market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);
+            _market = new BybitMarketDataService("https://api-testnet.bybit.com", debugMode: useTestnet);
         }
 
-        public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int limit)
+        public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null)
         {
-            var response = await _market.GetMarketKline(Category.SPOT, symbol, interval, limit);
+            var response = await _market.GetMarketKline(Category.INVERSE, symbol, interval, limit);
             if (!string.IsNullOrEmpty(response))
             {
-                var responseModel = JsonConvert.DeserializeObject<KlineList>(response);
-                return responseModel?.Klines ?? [];
+                var responseModel = JsonConvert.DeserializeObject<KlineResponse>(response);
+                return responseModel?.Result?.Klines ?? [];
             }
 
             return [];

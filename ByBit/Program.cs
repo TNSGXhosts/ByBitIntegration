@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using bybit.net.api.Models.Market;
 using Bybit;
 using Bybit.BybitClient;
 
@@ -12,11 +14,12 @@ builder.Services.RegisterBybitIntegrationServices(configuration);
 var app = builder.Build();
 
 using CancellationTokenSource cts = new();
-RunBybitBotAsync(app.Services, cts);
+await RunBybitBotAsync(app.Services, cts);
 
 await app.RunAsync();
 
-static void RunBybitBotAsync(IServiceProvider hostProvider, CancellationTokenSource cts)
+static async Task RunBybitBotAsync(IServiceProvider hostProvider, CancellationTokenSource cts)
 {
     var bybitClient = hostProvider.GetRequiredService<IBybitClient>();
+    var result = await bybitClient.GetKlinesAsync("BTCUSD", MarketInterval.Daily);
 }
