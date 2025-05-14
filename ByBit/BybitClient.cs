@@ -16,6 +16,9 @@ namespace Bybit
             var apiSecret = configuration["BYBIT_API_SECRET"];
             var useTestnet = configuration.GetValue<bool>("BYBIT_USE_TESNET");
 
+            if (apiKey == null || apiSecret == null)
+                throw new ArgumentException("Bybit API key or secret is not configured");
+
             _trade = new BybitTradeService(apiKey, apiSecret, debugMode: useTestnet);
             _market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);
         }
