@@ -1,4 +1,6 @@
 
+using Bybit.BybitClient;
+
 namespace Bybit;
 
 public static class BybitIntegrationRegistry
@@ -9,7 +11,7 @@ public static class BybitIntegrationRegistry
 
         services.AddMemoryCache(options => options.TrackStatistics = true);
 
-        services.AddSingleton<IBybitClient, BybitClient>();
+        services.AddSingleton<IBybitClient, BybitClient.BybitClient>();
       }
 
 

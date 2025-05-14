@@ -1,3 +1,5 @@
+namespace Bybit;
+
 public class BybitSettings {
     public required string ApiKey { get; set; }
     public required string SecretKey { get; set; }

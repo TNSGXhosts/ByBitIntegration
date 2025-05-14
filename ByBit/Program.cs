@@ -1,4 +1,5 @@
 using Bybit;
+using Bybit.BybitClient;
 
 var builder = WebApplication.CreateBuilder(args);
 

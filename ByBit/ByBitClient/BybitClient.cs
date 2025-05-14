@@ -1,20 +1,22 @@
 using bybit.net.api.ApiServiceImp;
 using bybit.net.api.Models;
 using bybit.net.api.Models.Market;
+using BybitModels;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace Bybit
+namespace Bybit.BybitClient
 {
     public class BybitClient : IBybitClient
     {
         private readonly BybitMarketDataService _market;
         private readonly BybitTradeService _trade;
 
-        public BybitClient(IConfiguration configuration)
+        public BybitClient(IOptions<BybitSettings> options)
         {
-            var apiKey = configuration["BYBIT_API_KEY"];
-            var apiSecret = configuration["BYBIT_API_SECRET"];
-            var useTestnet = configuration.GetValue<bool>("BYBIT_USE_TESNET");
+            var apiKey = options.Value.ApiKey;
+            var apiSecret = options.Value.SecretKey;
+            var useTestnet = options.Value.UseTestnet;
 
             if (apiKey == null || apiSecret == null)
                 throw new ArgumentException("Bybit API key or secret is not configured");
@@ -23,17 +25,17 @@ namespace Bybit
             _market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);
         }
 
-        public async Task<List<KlineDto>> GetKlinesAsync(string symbol, MarketInterval interval, int limit)
+        public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int limit)
         {
             var response = await _market.GetMarketKline(Category.SPOT, symbol, interval, limit);
 
             if (response != null)
             {
-                var responseObject = JsonConvert.DeserializeObject<KlineListDto>(response);
-                return responseObject?.Klines ?? new List<KlineDto>();
+                var responseObject = JsonConvert.DeserializeObject<KlineList>(response);
+                return responseObject?.Klines ?? new List<Kline>();
             }
 
-            return new List<KlineDto>();
+            return [];
         }
     }
 }

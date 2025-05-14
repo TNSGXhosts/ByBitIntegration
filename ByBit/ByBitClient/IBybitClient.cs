@@ -1,8 +1,9 @@
 using bybit.net.api.Models.Market;
+using BybitModels;
 
-namespace Bybit;
+namespace Bybit.BybitClient;
 
 public interface IBybitClient
 {
-    Task<List<KlineDto>> GetKlinesAsync(string symbol, MarketInterval interval, int limit);
+    Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int limit);
 }

@@ -10,4 +10,8 @@
     <PackageReference Include="bybit.net.api" Version="1.1.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../MyProject.Domain/MyProject.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

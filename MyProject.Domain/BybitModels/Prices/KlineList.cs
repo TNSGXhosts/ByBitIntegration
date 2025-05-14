@@ -1,12 +1,12 @@
 using Newtonsoft.Json;
 
-namespace Bybit {
-    public class KlineListDto {
+namespace BybitModels {
+    public class KlineList {
         [JsonProperty("list")]
-        public required List<KlineDto> Klines { get; set; }
+        public required List<Kline> Klines { get; set; }
     }
 
-    public class KlineDto {
+    public class Kline {
         public long Timestamp  { get; set; }
         public decimal Open { get; set; }
         public decimal High { get; set; }
