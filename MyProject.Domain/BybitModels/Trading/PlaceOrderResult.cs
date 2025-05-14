@@ -1,10 +1,7 @@
-using System.text;
+namespace MyProject.Domain.BybitModels.Trading;
 
-nnamespace MyProject.Domain.BybitModels.Trading
+public class PlaceOrderResult
 {
-    public class PlaceOrderResult
-    {
-        public string OrderId  { get; set; }
-        public string OrderLinkId { get; set; }
-    }
+    public required string OrderId  { get; set; }
+    public required string OrderLinkId { get; set; }
 }
