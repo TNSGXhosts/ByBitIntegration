@@ -1,7 +1,9 @@
 using bybit.net.api.Models.Market;
+using bybit.net.api.Models.Trade;
 using BybitModels;
+using MyProject.Domain.BybitModels.Trading;
 
-namespace Bybit.BybicClient;
+namespace Bybit.BybitClient;
 
 public interface IBybitClient
 {
