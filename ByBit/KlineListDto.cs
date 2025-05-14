@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Axi.Bybit {
+namespace Bybit {
     public class KlineListDto {
         [JsonProperty("list")]
         public required List<KlineDto> Klines { get; set; }

@@ -1,8 +1,21 @@
+using Bybit;
+
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSingleton<Axi.Bybit.BybitClient>();
+
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json")
+    .AddEnvironmentVariables()
+    .Build();
+builder.Services.RegisterBybitIntegrationServices(configuration);
 
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+using CancellationTokenSource cts = new();
+RunBybitBotAsync(app.Services, cts);
 
-app.Run();
+await app.RunAsync();
+
+static void RunBybitBotAsync(IServiceProvider hostProvider, CancellationTokenSource cts)
+{
+    var bybitClient = hostProvider.GetRequiredService<IBybitClient>();
+}

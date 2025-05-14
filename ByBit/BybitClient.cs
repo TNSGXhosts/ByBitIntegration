@@ -3,9 +3,9 @@ using bybit.net.api.Models;
 using bybit.net.api.Models.Market;
 using Newtonsoft.Json;
 
-namespace Axi.Bybit
+namespace Bybit
 {
-    public class BybitClient
+    public class BybitClient : IBybitClient
     {
         private readonly BybitMarketDataService _market;
         private readonly BybitTradeService _trade;
