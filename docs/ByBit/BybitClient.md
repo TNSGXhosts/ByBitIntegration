@@ -1,9 +1,18 @@
+## Constructor and Configuration
 
-# BybitClient.cs
+Class `bybitClient` uses constructor injection with `IConfiguration` to fetch necessary Bybit settings: `APIKEY@, `apiSecret`, and `useTestnet`.
 
-## 🧾 Initial Requirements
+The constructor automatically initializes two SDK client services:
 
-This file implements the class `BybitClient` which is part of the project [ByBitIntegration](https://github.com/TNSGXhosts/ByBitIntegration).
+ - `BybitTradeService`
+- `BybitMarketDataService`
 
-It wraps official SDK Client services from Bybit for candlestick historical data, and trading operations.
+Example:
 
+``cs
+if (configuration !is null)
+{
+    var bybit = new BybitClient(configuration);
+    // use bybit.GetKlinesAsync(...)
+}
+```
