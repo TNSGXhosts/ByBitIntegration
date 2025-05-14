@@ -1,38 +1,32 @@
 # BybitClient.cs
 
-##  🐳 Initial Requirements
+### Updated Realization
 
-- Realizuet .NET cliient desascirovannen to REST API Bybit
-- Inkapsuliruet rabotu s rynocknoy servisami:
-    - _market
-    - _trade
-- Initializiruet nastroki cherez DI
-- Obrésh konfiguratsio� api Predostavlyaet metod `GetKlinesAsync` dlya zopasa spisk svechey na zadanny ----
+The `BybitClient` class was updated to reflect new handling of {@symbol} ktines data using the new `responsemodel` structure.
 
-## 🌍 Technical Implementation
-## 🐻 Spaces namen
-``c
-using [Bybit.BybitClient];
+Improvements include:
+
+- Replaced the model `klineList` with `KLineResponse`
+- Switched use of `Category.INVERCEO` as the data source
+- Allowed `timelimit` ] not being used and made optional
+
+---
+
+### Example Usage
+
+```cs
+// Fetch klines from Bybit inverse market
+var klines = await client.GetKlinesAsync("BTCUSDT", MarketInterval.Daily);
+
 ```
 
-## 🔳 Konstruktor
+### Method Signature change
 
-```public BybitClient(IOptions<[BybitSettings]> options)````
+``cc
+public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null);
+```
 
-* Ispoltujet token @IOptions structura
-* Validiruet parametry, wybirazaet isklyushenie K*
-* Initializuet 2 vnutrennego clients:
-  * @bybitMarketDataService
-  * @bybitTradeService
-
-## 📳 Method: @GetKlinesAsync
-
-```public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int limit)```
-
-* Dealazh call @taskault GetMarketKline
-* Ipplies API properties from `_market`
-* Deserializacia tylem: `JSON.Convert:DeserializeObject`
-* Vozvarats list objectov `Kline`, liboms `List<kline>`
-
-- Task using any neuetrallie arguments vez pruzh.
-
+- @param symbol - Symbol to fetch market data for.
+- @para interval - Candlestick time interval
+- @para limit - Includes max number of entries to retrieve
+- @return List of Kcandlestics `strongly typed` to used in views.
