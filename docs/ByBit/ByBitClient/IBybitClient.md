@@ -2,48 +2,25 @@
 
 # 🐳 Initial Requirements
 
-Interfeis for
- - asynchronous retrieval of klynes data
-- supports configuration-free abstraction
-- intended to be used with DI/mocks/tests
+Interface for bybit client that defines market operations from the application.
 
- ---
+- Fetches klynes asynchronously
+- Places orders defined by side,type,aqt
+\n### Methods
 
-```c
-uses Bybit.net.api.Models.Market;
-uses BybitModels;
+``cc
+// Retrieves reserved market data with optional limit
+Async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null);
 
-namespace Bybit.BybitClient;
-
-public interface IBybitClient
-{
-    Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int limit);
-}
+// Places a market order using specified parameters: symbol, side, orderType, qty
+Async Task<PlaceOrderResult> PlaceOrderAsync(string symbol, Side side, OrderType orderType, decimal qty);
 ```
 
-## 📓 Contract Method
+### Notes
+- Method `getKaninesAsync` now supports `limit` as optional parameter
+- Response type updated to use `KlineResponse` instead of `KlineList`
+parsing full with `JSONConverter
+ - Adjusted comments for better autocompletion
 
-```public Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int limit);```
-
-- Asynchronny contract
-- Returns `list of `KLINE`, representing candlestick data
-- Parameters:
-  * symbol: bybit symbol explicit
-  * interval: market interval type
-  * limit: limit of records
-
-## 🌹 PlaceOrderAsync Method
-
-```public Task<PlaceOrderResult> PlaceOrderAsync(string symbol, Side side, OrderType orderType, decimal qty);```
-
--  **Purpose**: Places a market order on Bybit using provided parameters.
-- **Returns**: A [PlaceOrderResult] instance with Bybit's response.
-- **Parameters**:
-   - symbol: Market symbol (e.g. BTCUSDT)
-   - side: `KUID | SELL*/
-   - orderType: Type of the order (e.g. MARKET)\n   - qty: Decimal quantity to place
-
-## 🐐 Integration
-
-Realized by [BybitClient](BybitClient.md)
-- Dependency Injection in BybitIntegrationRegistry.cs
+### Integration
+Best used with DI in consumer services and view testing through IBybitClient with mocks.
