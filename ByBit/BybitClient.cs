@@ -1,8 +1,6 @@
-
 using bybit.net.api.ApiServiceImp;
 using bybit.net.api.Models;
 using bybit.net.api.Models.Market;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace Axi.Bybit
@@ -22,7 +20,7 @@ namespace Axi.Bybit
             _market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);
         }
 
-        public async Task<List<KlineDto>> GetKlines@³ync(string symbol, MarketInterval interval, int limit)
+        public async Task<List<KlineDto>> GetKlinesAsync(string symbol, MarketInterval interval, int limit)
         {
             var response = await _market.GetMarketKline(Category.SPOT, symbol, interval, limit);
 
