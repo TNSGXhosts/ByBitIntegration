@@ -1,18 +1,22 @@
-## Constructor and Configuration
+## Method: GetKlinesAsync
 
-Class `bybitClient` uses constructor injection with `IConfiguration` to fetch necessary Bybit settings: `APIKEY@, `apiSecret`, and `useTestnet`.
+This method is the core public async method of the `BybitClient` class. Its intent is to retrieve candlestick information from the bybit api.
 
-The constructor automatically initializes two SDK client services:
+Signature:
 
- - `BybitTradeService`
-- `BybitMarketDataService`
-
-Example:
-
-``cs
-if (configuration !is null)
-{
-    var bybit = new BybitClient(configuration);
-    // use bybit.GetKlinesAsync(...)
-}
+```cs
+nopublic async Task<List<KlineDto>> GetKlines@³ync(string symbol, MarketInterval interval, int limit);
 ```
+
+Parameters:
+
+- `symbol`: trading symbol ex. "BTCUSDT"
+- `interval`: granularity for klines eg. "1M", "1H*
+- `limit`: number of entries to return
+
+Behaviour:
+
+- Calls `_market` service and passes parameters
+- Streams response into JSON
+- Deserializes items to typed `KlineDto` representation
+- Returns empty list on errors or null
