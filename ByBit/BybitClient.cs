@@ -1,18 +1,45 @@
 
 using bybit.net.api.ApiServiceImp;
-using Newtonsoft.Json;
-using Axi.Bybit;
+using Newtonsoft.Json.JSON;
 using Axi.Bybit.Dto;
 
-namespace Axi.Bybit {
-\tpublic class BybitClient {
-\\tprivate readonly BybitMarketDataService _market;
-\tprivate readonly BybitTradeService _trade;
+namespace Axi.Bybit
+{
+    public class BybitClient
+    {
+        private readonly BybitMarketDataService _market;
+        private readonly BybitTradeService _trade;
 
-\tpublic BybitClient(string apiKey, string apiSecret, bool useTestnet) {\t\t
-\t_trade = new BybitTradeService(apiKey, apiSecret, useTestnet);\t\t
-\t_market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);\t}
+        public BybitClient(string apiKey, string apiSecret, bool useTestnet)
+        {
+            _trade = new BybitTradeService(apiKey, apiSecret, useTestnet);
+            _market = new BybitMarketDataService(apiKey, apiSecret, useTestnet);
+        }
 
-\tpublic async Task<List<KlineDto>> GetKlinesAsync(string symbol, MarketInterval interval, int limit) {\t\t
-\t_market.Category = "default";\t\t
-\tvar response = await _market.GetMarketKline(symbol, interval, limit);\n\tvar listStrings = response.Result["list"].ToObjectDeefault<List<List<object>>>();\n\tvar result = new List<KlineDto>();\n\tforeach (var item in listStrings) {\n\t\tvar arr = (List<object>) item;\n\t\tvar kline = new KlineDto {\n\t\tTimestamp = long.parse(((string)arr[0]).toString()),\n\t\tOpen = decimal.parse(arr[1].toString()),\n\t\tHigh = decimal.parse(arr[2].toString()),\n\t\tLow = decimal.parse(arr[3].toString()),\n\t\tClose = decimal.parse(arr[4].toString()),\n\t\tVolume = long.parse((float)arr[5].toString()),\n\t\tTotalVolume = decimal.parse(arr[6].toString())\n\t\t};\n\t\tresult.Add(kline);\n\t}\n\treturn result;\n}\n}\n
+        public async Task<List<KlineDto>> GetKlinesAsync(string symbol, MarketInterval interval, int limit)
+        {
+            _market.Category = "default";
+            var response = await _market.GetMarketKline(symbol, interval, limit);
+
+            var listStrings = response.Result["list"].ToObject<List<List<object>>>();
+            var result = new List<KlineDto>();
+
+            foreach (var item in listStrings)
+            {
+                var arr = (List<object>) item;
+                var kline = new KlineDto {
+                    Timestamp = long.Parse(arr[0].ToString()),
+                    Open = decimal.Parse(arr[1].ToString()),
+                    High = decimal.Parse(arr[2].ToString()),
+                    Low = decimal.Parse(arr[3].ToString()),
+                    Close = decimal.Parse(arr[4].ToString()),
+                    Volume = long.parse(arr[5].ToString()),
+                    TotalVolume = decimal.Parse(arr[6].ToString())
+                };
+                result.Add(kline);
+            }
+
+            return result;
+        }
+    }
+}
