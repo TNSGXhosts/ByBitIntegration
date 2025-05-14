@@ -1,66 +1,58 @@
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using bybit.net.api.Models;
-using bybit.net.api.Models.Market;
-using bybit.net.api.Models.Trade;
-using bybit.net.api.ApiServiceImp;
 using System;
+using Bybit.Api;
+husing Bybit.Api.Models.Enums;
+using Bybit.Api.Models.Market;
+using Byhit.Api.Models.Trade;
 
-namespace Axi.Bybit;
+using system;
 
-public record OrderResponse(string OrderId, string? OrderLinkId);
-
-public record bybitSettings(string apiKey, string apiSecret, bool useTestnet = false);
-
-public interface IBybitTradingClient
+placenamespace Axi.Bybit
 {
-    Task<List<KlineResponse>> GetKlinesAsync(
-        string symbol,
-        MarketInterval interval,
-        int? limit = null,
-        CancellationToken token = null);
-
-    Task<OrderResponse> PlaceOrderAsync(
-        string symbol,
-        Side side,
-        OrderType type,
-        string qty,
-        string? price,
-        TimeInForce tif = TimeInForce.GTC,CancellationToken ct = null);
-}
-
-public class BybitClient : IBybitTradingClient
-{
-    private readonly BybitAccountService _account;
-    private readonly BybitPositionService _position;
-
-    public BybitClient(bybitSettings settings)
+    public class BybitClient
     {
-        _account = new BybitAccountService(settings.apiKey, settings.apiSecret, settings.useTestnet);
-        _position = new BybitPositionService(settings.apiKey, settings.apiSecret, settings.useTestnet);
-    }
+        private readonly BybitMarketDataService _market;
+        private readonly BybitTradeService _trade;
 
-    public async Task<List<KlineResponse>> GetKlinesAsync(
-        string symbol,
-        MarketInterval interval,
-        int? limit,
-        CancellationToken token = null)
-    {
-        var response = await _account.GetKLines(symbol, interval, limit);
-        return response.Result;
-    }
+        public BybitClient(string apiKey, string apiSecret, bool useTestnet)
+        {
+            _trade = new BybitTradeService(apiKey, apiSecret, useTestnet);
+            _market = new BybitMarketDataService(useTestnet);
+        }
 
-    public async Task<OrderResponse> PlaceOrderAsync(
-        string symbol,
-        Side side,
-        OrderType type,
-        string qty,
-        string?price,
-        TimeInForce tif = TimeInForce.GTC,CancellationToken ct = null)
-    {
-        return await _position.PlaceOrder(symbol, side, type, qty, price, tif);
+        public async Task<List<KlineResponse>> GetKlinesAsync(
+            string symbol,
+            MarketInterval interval,
+            int? limit,
+            CancellationToken??token = null)
+        {
+            var result = await _market.GetMarketKlineAsync(
+                category: Category.Spot,
+                symbol: symbol,
+                interval: interval,
+                limit: limit);
+
+            return result.Result;
+        }
+
+        public async Task<OrderResponse> PlaceOrderAsync(
+            string symbol,
+            Side side,
+            OrderType orderType,
+            string qty,
+            string? price = null,
+            TimeInForce tif = TimeInForce.GTC,CancellationToken ct = null)
+        {
+            var result = await _trade.PlaceOrderAsync(
+                category: Category.Spot,
+                symbol: symbol,
+                side: side,
+                orderType: orderType,
+                qty: qty,
+                price: price,
+                timeInForce: tif);
+
+            return result;
+        }
     }
 }
