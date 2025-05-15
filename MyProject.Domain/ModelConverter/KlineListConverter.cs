@@ -1,5 +1,5 @@
 using System.Globalization;
-using BybitModels;
+using MyProject.Domain.BybitModels.Prices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -18,12 +18,12 @@ public class KlineListConverter : JsonConverter<List<Kline>>
             {
                 result.Add(new Kline
                 {
-                    Timestamp = long.Parse(values[0]!.ToString()),
+                    StartTime = long.Parse(values[0]!.ToString()),
                     Open = decimal.Parse(values[1]!.ToString(), CultureInfo.InvariantCulture),
                     High = decimal.Parse(values[2]!.ToString(), CultureInfo.InvariantCulture),
                     Low = decimal.Parse(values[3]!.ToString(), CultureInfo.InvariantCulture),
                     Close = decimal.Parse(values[4]!.ToString(), CultureInfo.InvariantCulture),
-                    Volume = long.Parse(values[5]!.ToString(), CultureInfo.InvariantCulture),
+                    Volume = decimal.Parse(values[5]!.ToString(), CultureInfo.InvariantCulture),
                     Turnover = decimal.Parse(values[6]!.ToString(), CultureInfo.InvariantCulture),
                 });
             }

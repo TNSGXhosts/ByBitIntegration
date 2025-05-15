@@ -29,7 +29,7 @@ namespace Bybit.BybitClient
 
         public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null)
         {
-            var response = await _market.GetMarketKline(Category.INVERSE, symbol, interval, limit);
+            var response = await _market.GetMarketKline(Category.INVERSE, symbol, interval, limit: limit);
             if (!string.IsNullOrEmpty(response))
             {
                 var responseModel = JsonConvert.DeserializeObject<KlineResponse>(response);
