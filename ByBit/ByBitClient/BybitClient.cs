@@ -30,7 +30,7 @@ namespace Bybit.BybitClient
             _account = new BybitAccountService(apiKey, apiSecret, debugMode: useTestnet);
         }
 
-        public async Task<List<Kline>> GetKlinesAsync(optional string symbol, MarketInterval interval, int? limit = null)
+        public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null)
         {
             var response = await _market.GetMarketKline(Category.INVERSE, symbol, interval, limit: limit);
             if (!string.IsNullOrEmpty(response))
@@ -56,7 +56,7 @@ namespace Bybit.BybitClient
 
         public async Task<WalletBalanceResponse?> GetWalletBalanceAsync(AccountType accountType)
         {
-            return await _account.GetWalletBalanceAsync(accountType);
+            return await _account.GetAccountBalance(accountType);
         }
     }
 }
