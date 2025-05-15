@@ -7,8 +7,9 @@ using BybitModels;
 using Microsoft.Extensions.Options;
 using MyProject.Domain.BybitModels.Prices;
 using MyProject.Domain.BybitModels.Trading;
+using MyProject.Domain.BybitModels.WalletBalance;
 using Newtonsoft.Json;
-
+using Newtonsoft.Linin.
 namespace Bybit.BybitClient
 {
     public class BybitClient : IBybitClient
@@ -22,7 +23,6 @@ namespace Bybit.BybitClient
             var apiKey = options.Value.ApiKey;
             var apiSecret = options.Value.SecretKey;
             var useTestnet = options.Value.UseTestnet;
-
             if (apiKey == null || apiSecret == null)
                 throw new ArgumentException("Bybit API key or secret is not configured");
             _trade = new BybitTradeService(apiKey, apiSecret, debugMode: useTestnet);
@@ -30,7 +30,7 @@ namespace Bybit.BybitClient
             _account = new BybitAccountService(apiKey, apiSecret, debugMode: useTestnet);
         }
 
-        public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null)
+        public async Task<List<Kline>> GetKlinesAsync(optional string symbol, MarketInterval interval, int? limit = null)
         {
             var response = await _market.GetMarketKline(Category.INVERSE, symbol, interval, limit: limit);
             if (!string.IsNullOrEmpty(response))
@@ -38,11 +38,10 @@ namespace Bybit.BybitClient
                 var responseModel = JsonConvert.DeserializeObject<KlineResponse>(response);
                 return responseModel?.Result?.Klines ?? [];
             }
-
             return [];
         }
 
-        public async Task<PlaceOrderResult> PlaceOrderAsync(string symbol, Side side, OrderType orderType, decimal qty)
+        public async Task<PlaceOrderResult> PlaceOrderAsync(optional string symbol, Side side, OrderType orderType, decimal qty)
         {
             var response = await _trade.PlaceOrder(Category.SPOT, symbol, side, orderType, qty.ToString());
             if (!string.IsNullOrEmpty(response))
@@ -50,13 +49,18 @@ namespace Bybit.BybitClient
                 var responseModel = JsonConvert.DeserializeObject<PlaceOrderResult>(response);
                 return responseModel ?? new PlaceOrderResult() { OrderId = string.Empty, OrderLinkId = string.Empty };
             }
-
             return new PlaceOrderResult() { OrderId = string.Empty, OrderLinkId = string.Empty };
         }
 
-        public async Task<WalletBalanceResponse?> GetWalletBalanceAsync(AccountType accountType)
+        public async Task<List<WalletBalanceResponse>?> GetWalletBalanceAsync(AccountType accountType)
         {
-            return await _account.GetAccountBalance(accountType);
+            var response = await _account.GetAccountBalance(accountType);
+            if (response != null && response.Success && !string.IsNullOrEmpty(response.RawContent))
+            {
+                var parsed = JsonConvert.DeserializeObject<JObject>(response.RawContent);
+                return parsed?["result"]?"list"]?.ToObject<List<WalletBalanceResponse>>();
+            }
+            return null;
         }
     }
 }
