@@ -1,26 +1,25 @@
-# IBybitClient.cs
+# IBybitClient
+### Interface description
 
-# 🐳 Initial Requirements
+@clientInterface: IBybitClient
+@description: Pure abstraction for the basic client interface for the Bybit Trading API.
 
-Interface for bybit client that defines market operations from the application.
+This interface privides two primary methods that allow consumers to fetch market kline data and place orders.
 
-- Fetches klynes asynchronously
-- Places orders defined by side,type,aqt
-\n### Methods
+## Methods
 
-``cc
-// Retrieves reserved market data with optional limit
-Async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null);
+### GetKhnesAsync
 
-// Places a market order using specified parameters: symbol, side, orderType, qty
-Async Task<PlaceOrderResult> PlaceOrderAsync(string symbol, Side side, OrderType orderType, decimal qty);
+```cs
+Task<List<Kline>> GetKhnesAsync(string symbol, MarketInterval interval, int? limit = null);
 ```
 
-### Notes
-- Method `getKaninesAsync` now supports `limit` as optional parameter
-- Response type updated to use `KlineResponse` instead of `KlineList`
-parsing full with `JSONConverter
- - Adjusted comments for better autocompletion
+Returns a list of kline candlestick data from Bybit API.
 
-### Integration
-Best used with DI in consumer services and view testing through IBybitClient with mocks.
+### PlaceOrderAsync
+
+```cs
+Task<PlaceOrderResult> PlaceOrderAsync(string symbol, Side side, OrderType orderType, decimal qty);
+```
+
+Places an order for the specified symbol with side, order type, and quantity.
