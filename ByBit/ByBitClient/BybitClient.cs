@@ -6,7 +6,6 @@ using BybitModels;
 using Microsoft.Extensions.Options;
 using MyProject.Domain.BybitModels.Prices;
 using MyProject.Domain.BybitModels.Trading;
-using MyProject.Domain.BybitModels.Account;
 using Newtonsoft.Json;
 
 namespace Bybit.BybitClient
@@ -15,25 +14,41 @@ namespace Bybit.BybitClient
     {
         private readonly BybitMarketDataService _market;
         private readonly BybitTradeService _trade;
-        private string _apiKey;
-        private string _apiSecret;
-        private bool _useTestnet;
 
         public BybitClient(IOptions<BybitSettings> options)
         {
-            _apiKey = options.Value.ApiKey;
-            _apiSecret = options.Value.SecretKey;
-            _useTestnet = options.Value.UseTestnet;
-            if (_apiKey == null || _apiSecret == null)
+            var apiKey = options.Value.ApiKey;
+            var apiSecret = options.Value.SecretKey;
+            var useTestnet = options.Value.UseTestnet;
+            
+            if (apiKey == null || apiSecret == null)
                 throw new ArgumentException("Bybit API key or secret is not configured");
-            _trade = new BybitTradeService(_apiKey, _apiSecret, debugMode: _useTestnet);
-            _market = new BybitMarketDataService("https://api-testnet.bybit.com", debugMode: _useTestnet);
+            _trade = new BybitTradeService(apiKey, apiSecret, debugMode: useTestnet);
+            _market = new BybitMarketDataService("https://api-testnet.bybit.com", debugMode: useTestnet);
         }
-        public async Task<WalletBalance?> GetWalletBalanceAsync(string accountType)
+
+        public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null)
         {
-            var accountService = new BybitAccountService(_apiKey, _apiSecret);
-            var walletRes = await accountService.GetWalletBalanceAsync(accountType);
-            return walletRes?.Data;
+            var response = await _market.GetMarketKline(Category.INVERSE, symbol, interval, limit: limit);
+            if (!string.IsNullOrEmpty(response))
+            {
+                var responseModel = JsonConvert.DeserializeObject<KlineResponse>(response);
+                return responseModel?.Result?.Klines ?? [];
+            }
+
+            return [];
+        }
+
+        public async Task<PlaceOrderResult> PlaceOrderAsync(string symbol, Side side, OrderType orderType, decimal qty)
+        {
+            var response = await _trade.PlaceOrder(Category.SPOT,symbol, side, orderType, qty.ToString());
+            if (!string.IsNullOrEmpty(response))
+            {
+                var responseModel = JsonConvert.DeserializeObject<PlaceOrderResult>(response);
+                return responseModel ?? new PlaceOrderResult() { OrderId = string.Empty, OrderLinkId = string.Empty };
+            }
+            
+            return new PlaceOrderResult() { OrderId = string.Empty, OrderLinkId = string.Empty };
         }
     }
 }
