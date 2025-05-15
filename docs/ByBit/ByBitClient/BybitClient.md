@@ -1,32 +1,36 @@
-# BybitClient.cs
+# BybitClient
+### Class description
 
-### Updated Realization
+@class: BybitClient
+@description: Implementation of IBybitClient that provides asynchronous methods to interact with the bybit.net.api service api for market trading and order management.
+## Constructor
 
-The `BybitClient` class was updated to reflect new handling of {@symbol} ktines data using the new `responsemodel` structure.
+ ```cs
+bybitClient(IOptions<bybitSettings> options)
+```
 
-Improvements include:
+Takes the service settings and initializes the API key/secret in testnet or live mode.
 
-- Replaced the model `klineList` with `KLineResponse`
-- Switched use of `Category.INVERCEO` as the data source
-- Allowed `timelimit` ] not being used and made optional
+## Methods
 
----
-
-### Example Usage
+### GetKlinesAsync
 
 ```cs
-// Fetch klines from Bybit inverse market
-var klines = await client.GetKlinesAsync("BTCUSDT", MarketInterval.Daily);
-
+Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null);
 ```
 
-### Method Signature change
+Retrieves market candlestick data (klines) from the Bybit API.
 
-``cc
-public async Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null);
+@aram type="string" name="symbol" description="The trading pair symbol"
+`@return: Task<List<Kline>>
+
+### PlaceOrderAsync
+
+```cs
+Task<PlaceOrderResult> PlaceOrderAsync(string symbol, Side side, OrderType orderType, decimal qty);
 ```
 
-- @param symbol - Symbol to fetch market data for.
-- @para interval - Candlestick time interval
-- @para limit - Includes max number of entries to retrieve
-- @return List of Kcandlestics `strongly typed` to used in views.
+Requests add orders for the specified symbol with side (Buy, Sell) and order type (Limit, Market, etc).
+
+@aram type="string" name="symbol"
+`@return: Task<PlaceOrderResult>
