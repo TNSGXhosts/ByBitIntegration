@@ -1,27 +1,21 @@
-# BybitSettings.cs
+# BybitSettings
 
-## 🐻 Initial Requirements
+### Class description
 
-Configurationnaya class driz binding nadstroek iz `appsettings.json` i enf
- - Anotational obyect with `REQUIRED` keys to support safe config
- - Helps inject with API client injection
- - Default used with `IOptions` wrapping
+@class: BybitSettings
+@description: Configuration class used to bind via `appsettings.json` and resolved through IOptions.
 
-## 📓 Technical Implementation
-```c
-namespace Axis;
+Contains three fields:
 
-class BybitSettings
-{
-    public required string ApiKey { get; set; }
-    public required string SecretKey { get; set; }
-    public bool UseTestnet { get; set; }
-}
+ - `ApiKey`: required string
+ - `SecretKey`: required string
+ - `UseTestnet`: boolean value to specify whether to use the testnet
+### Usage
+
+```cs
+services.AddBybitTradingClient(o => {
+  o.ApiKey = Environment.GetEnvironmentVariable("BYBIT_API_KEY");
+  o.ApiSecret = Environment.GetEnvironmentVariable("BYBIT_API_SECRET");
+  o.UseTestnet = true;
+});
 ```
-
-
-## 👿 Usage
-
-- Registered with `config.Pass\bybitSettings`
-- Sensitive case and secrets via ENV to avoid committing
-- Injected via `BybitClient` & `_config.Registry`.
