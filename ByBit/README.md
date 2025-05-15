@@ -1,67 +1,36 @@
+# BybitTradingClient
 
-# BybitTradingClient Adapter
+This repository contains a modern .NET Client adapter for the Bybit API ( ` bybit.net.api` `).
 
-A lightweight .NET client adapter for the official Bybit SDK (`bybit.net.api`).
+This integration supports two main operations:
 
-This adapter implements two basic operations:
+- Getting market kline data (using `GetKlinesAsync`)
+- Placing market orders (using `PlaceOrderAsync`)
 
-- 👟 Fetching candlestick data (`GetMarketKline`)
-- 💫 Placing market orders (`PlaceOrderAsync`)
+Grounded to be simple, extensible, and suitable for live and testnet trading scenarios.
 
-Designed for clarity, extensibility, and fast prototyping.
+## Installation
 
----
-
-## ↓ Installation
-
-```bash
-dotnet add package bybit.net.api
-```
-
----
-
-## ↓ Dependency Injection Setup
-
-Register the client in your DI container:
-
-```csharp
-services.AddBybitTradingClient(o =>
-{
-    o.ApiKey = Environment.GetEnvironmentVariable("BYBIT_API_KEY");
-    o.ApiSecret = Environment.GetEnvironmentVariable("BYBIT_API_SECRET");
-    o.UseTestnet = true; // Set false for live trading
-});
-```
-
----
-
-## 🐻 Usage Example
-
-```csharp
-var client = provider.GetRequiredService<IBybitTradingClient>();
-
-// Fetch klines
-var klines = await client.GetKlinesAsync("BTCUSDT", MarketInterval.OneMinute, 100);
-
-// Place market order
-await client.PlaceOrderAsync("BTCUSDT", Side.BUY, OrderType.MARKET, qty: "0.0001");
+``b
+dotnet install bybit.net.api
 ```
 
 
----
+## Dependency Injection
 
-## ↧ Kline Parsing
+Register the client via Service Collection.
 
-The method `GetKlinesAsync` deserializes `result.list` into a strongly typed `klineDto` model:
+Example:
+```cs
+services.RegisterBybitIntegrationServices(configuration);
+```
 
-- `Timestamp`
-- `Open`, `High`, `Low`, `Close`
-- `Volume`, `TotalVolume`
+## Usage
 
----
+After registration, you can resolve IBybitClient from DI and use it to access Bybit:
 
-## 🌹 Roadmap
+```cs
+var instance = host.provider.GetRequiredService<IBybitClient>();
+var klines = await instance.GetKlinesAsync("symbol", MarketInterval.Daily);
+```
 
-- Add support for limit orders
-- Integrate WebSocket market data streams
-- Implement logging and retry logic
