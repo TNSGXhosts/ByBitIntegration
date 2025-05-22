@@ -3,6 +3,7 @@ using bybit.net.api.Models.Trade;
 using MyProject.Domain.BybitModels.Prices;
 using MyProject.Domain.BybitModels.Trading;
 using bybit.net.api.Models.Account;
+using MyProject.Domain.BybitModels;
 
 namespace Bybit.BybitClient
 {
@@ -10,6 +11,6 @@ namespace Bybit.BybitClient
     {
         Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null);
         Task<PlaceOrderResult> PlaceOrderAsync(string symbol, Side side, OrderType orderType, decimal qty);
-        Task<WalletBalance?> GetWalletBalanceAsync(AccountType accountType);
+        Task<IEnumerable<WalletBalance>> GetWalletBalanceAsync(AccountType accountType);
     }
 }
