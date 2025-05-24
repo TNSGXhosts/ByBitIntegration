@@ -33,6 +33,6 @@ public class KlineRepositoryTests
         await _repository.SaveAsync(klines);
 
         var saved = await _repository.GetAsync("BTCUSDT", "1m");
-        Assert.That(saved, Has.Count.EqualTo(1));
+        NUnit.Framework.Assert.That(saved, Has.Count.EqualTo(1));
     }
 }
