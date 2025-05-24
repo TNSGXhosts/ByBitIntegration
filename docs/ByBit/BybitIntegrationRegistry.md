@@ -1,29 +1,13 @@
 # BybitIntegrationRegistry
 
-Class used to register client and configuration from `AppSettings`.
+`BybitIntegrationRegistry` is a helper class that wires up the client and configuration using Microsoft.Extensions.DependencyInjection. It exposes one extension method used at application startup.
 
-
-### Public method:
-
-__RegisterBybitIntegrationServices__
-
-REGISTER client and settings.
-
-Usage:
-
-```c
-services.RegisterBybitIntegrationServices(configuration);
+## RegisterBybitIntegrationServices
+```csharp
+void RegisterBybitIntegrationServices(this IServiceCollection services, IConfigurationRoot configuration);
 ```
+- Binds the `BybitSettings` section from configuration.
+- Adds `IBybitClient` as a singleton service.
+- Enables in-memory caching for the underlying API service.
 
-### Private static configuration method:
-
-Extracts `BybitSettings` from configuration tree.
-
-Data is bound to the `BybitSettings` class and bind via:
-```cs
-services.Configure<BybitSettings>(settings =>
-  configuration.GetSection(nameof(BybitSettings)).Bind(settings));
-```
-
-
-The service is instantiated as a singleton for simple disposable actions.
+Call this method in your startup code before resolving `IBybitClient`.

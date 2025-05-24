@@ -1,28 +1,24 @@
 # Program.cs
 
-### Initialization and Run
-The application entrypoint sets up an async WebApplication with configuration files, registers services and runs functional code.
+The example program demonstrates how to configure the client inside an ASP.NET style host. It loads configuration, registers the integration and fetches daily klines for `BTCUSD`.
 
-```c
-builder = WebApplication.CreateBuilder(args);
-
+```csharp
+var builder = WebApplication.CreateBuilder(args);
 var configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .AddEnvironmentVariables()
     .Build();
 
 builder.Services.RegisterBybitIntegrationServices(configuration);
-
 var app = builder.Build();
 
 using CancellationTokenSource cts = new();
-RunBybitBotAsync(app.Services, cts);
-
+await RunBybitBotAsync(app.Services, cts);
 await app.RunAsync();
 
-async Task RunBybitBotAsync(IServiceProvider hostProvider, CancellationTokenSource cts)
+static async Task RunBybitBotAsync(IServiceProvider services, CancellationTokenSource cts)
 {
-    var client = hostProvider.GetRequiredService<IBybitClient>();
-    var result = await client.GetKlinesAsync("BTCUSD", MarketInterval.Daily);
+    var client = services.GetRequiredService<IBybitClient>();
+    var klines = await client.GetKlinesAsync("BTCUSD", MarketInterval.Daily);
 }
 ```

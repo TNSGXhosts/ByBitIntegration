@@ -1,25 +1,22 @@
 # IBybitClient
-### Interface description
 
-@clientInterface: IBybitClient
-@description: Pure abstraction for the basic client interface for the Bybit Trading API.
-
-This interface privides two primary methods that allow consumers to fetch market kline data and place orders.
+`IBybitClient` describes the minimal set of operations required by the application. It deliberately exposes only a subset of the v5 REST API.
 
 ## Methods
-
-### GetKhnesAsync
-
-```cs
-Task<List<Kline>> GetKhnesAsync(string symbol, MarketInterval interval, int? limit = null);
+### GetKlinesAsync
+```csharp
+Task<List<Kline>> GetKlinesAsync(string symbol, MarketInterval interval, int? limit = null);
 ```
-
-Returns a list of kline candlestick data from Bybit API.
+Returns historical market klines for the specified symbol. `MarketInterval` corresponds to Bybit v5 interval values (e.g. `1`, `3`, `D` etc.).
 
 ### PlaceOrderAsync
-
-```cs
+```csharp
 Task<PlaceOrderResult> PlaceOrderAsync(string symbol, Side side, OrderType orderType, decimal qty);
 ```
+Creates a spot order. Only the main fields are exposed; additional optional parameters can be added to the client implementation if required.
 
-Places an order for the specified symbol with side, order type, and quantity.
+### GetWalletBalanceAsync
+```csharp
+Task<IEnumerable<WalletBalance>> GetWalletBalanceAsync(AccountType accountType);
+```
+Retrieves account balances for the given account type (`AccountType.Unified` for v5 accounts).

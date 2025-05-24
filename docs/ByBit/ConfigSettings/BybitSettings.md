@@ -1,21 +1,20 @@
 # BybitSettings
 
-### Class description
+Configuration options used by `BybitClient`. The values are typically loaded from `appsettings.json` and bound via `IOptions<T>`.
 
-@class: BybitSettings
-@description: Configuration class used to bind via `appsettings.json` and resolved through IOptions.
+| Property   | Description                              |
+|------------|------------------------------------------|
+| `ApiKey`   | Your Bybit API key.                      |
+| `SecretKey`| Your Bybit API secret.                   |
+| `UseTestnet` | When `true`, requests are sent to `https://api-testnet.bybit.com`. |
 
-Contains three fields:
-
- - `ApiKey`: required string
- - `SecretKey`: required string
- - `UseTestnet`: boolean value to specify whether to use the testnet
-### Usage
-
-```cs
-services.AddBybitTradingClient(o => {
-  o.ApiKey = Environment.GetEnvironmentVariable("BYBIT_API_KEY");
-  o.ApiSecret = Environment.GetEnvironmentVariable("BYBIT_API_SECRET");
-  o.UseTestnet = true;
-});
+Example `appsettings.json` section:
+```json
+{
+  "BybitSettings": {
+    "ApiKey": "<your key>",
+    "SecretKey": "<your secret>",
+    "UseTestnet": true
+  }
+}
 ```
