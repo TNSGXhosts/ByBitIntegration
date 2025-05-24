@@ -1,30 +1,13 @@
-# KlineResponse.cs
+# KlineResponse
 
-### Initial Requirements
-Class `KlineResponse ` predstavlena response wrapper for results from Bybit aPI.
+Wrapper for the response returned by the Market Kline v5 endpoint. The `list` field from the API is converted to a collection of `Kline` objects using `KlineListConverter`.
 
-Typical json response from Bybit looks like:
-
- * `retCode` – result code (expected to be 0 for success)
- * `retMsg` – additional info about the response
- * `result` – an object containing the kfine data
-
-### Technical Implementation
-
-* `KlineResponse ` contains top-level metadata and fully parsed klines
-* `list` describes an array-of-arrays which need be converted via `KlineListConverter`
-* https://dev.bybit.com/en-US/docs/market/kline
-
- ```cs
-nlass KlineResponse {
-    public int RetCode { get; set; }
-    public string RetMsg { get; set; }
-    public KlineList Result { get; set; }
-}
-
-public class KlineList {
-    [JSONProperty("list")]
-    [JSONConverter(typeof(KlineListConverter))]
-    public required List<Kline> Klines { get; set; }
+```json
+{
+  "retCode": 0,
+  "retMsg": "OK",
+  "result": {
+    "list": [ [<kline values>] ]
+  }
 }
 ```

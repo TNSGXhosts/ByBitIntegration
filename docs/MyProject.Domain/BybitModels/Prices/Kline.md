@@ -1,26 +1,13 @@
-# Kline.cs
- 
-### Initial Requirements
- Class `kline` predstavlena sdata of candlestick history data fetched from Bybit Market API.
+# Kline
 
-- `Timestamp`: unix time in ms
-- `Open`, `High`, `Low`, `Close`: price off the interval
-- `Volume`, `Turnover`: amounts traded
+Represents a single candlestick returned by the Bybit v5 Market Kline endpoint. Time is expressed in milliseconds since Unix epoch.
 
-### Technical Implementation
-*- Mutable data container with {set; get;}
-*- Fields are readble from JSON/response
-----
-
- ```cs
-nlass0Kline
-{
-  public long Timestamp  { get; set; }
-  public decimal Open { get; set; }
-  public decimal High { get; set; }
-  public decimal Low { get; set; }
-  public decimal Close { get; set; }
-  public long Volume { get; set; }
-  public decimal Turnover { get; set; }
-}
-```
+| Property   | Description |
+|------------|-------------|
+| `StartTime`| Candle open time. |
+| `Open`     | Opening price.   |
+| `High`     | Highest price during the interval. |
+| `Low`      | Lowest price during the interval.  |
+| `Close`    | Closing price.   |
+| `Volume`   | Trade volume.    |
+| `Turnover` | Quote asset turnover. |

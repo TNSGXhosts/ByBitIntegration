@@ -1,16 +1,8 @@
 # PlaceOrderResult
 
-Result model representing order ID/link returned from bybit.
+Represents the identifiers returned after submitting an order. Only a subset of fields from the official response is modelled here.
 
-Typicallly returned from `PlaceOrderAsync` call reads this as:
-
-```cs
-class PlaceOrderResult {
-    public required string OrderId  { get; set; }
-    public required string OrderLinkId { get; set; }
-}
-```
-
-## Usage
-
-Instance of this class is returned from valid create/place order request.
+| Property       | Description                |
+|----------------|----------------------------|
+| `OrderId`      | Exchange generated order identifier. |
+| `OrderLinkId`  | Client provided identifier. |

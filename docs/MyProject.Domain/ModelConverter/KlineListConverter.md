@@ -1,37 +1,14 @@
-# KlineListConverter.cs
+# KlineListConverter
 
-### Initial Requirements
-Converter `specialized for Bybit klines a
- returns a strongly typed list of `Kline` objects from a raw [JSON]/array-of-arrays.
+A custom JSON converter that transforms the nested array format of klines returned by Bybit into a list of strongly typed `Kline` objects.
 
-This is required because Bybit lists are returned like nested structured objects within arrays.
+The Bybit API returns klines as arrays in the following order:
+1. Start timestamp
+2. Open price
+3. High price
+4. Low price
+5. Close price
+6. Volume
+7. Turnover
 
-Example Value:
- [
-  "timestamp",
-  "open",
-  "high",
-  "low",
-  "close",
-  "volume",
-  "turnover"
-]
-
-### Technical Implementation
-
-* Subtitutes JSON.js **parser** attributes as expected by `Kline`
-* Ignores `WriteJson`.
-
- ```cs
-nlass KlineListConverter : JsonConverter<List<Kline>>{
-    public override List<Kline> ReadJson(
-        "json", Type of Object, List<Kline> emptyValue, bool hasExistingValue, JSONSerializer serializer)
-    {
-        // JSON array of arrays to restructured list
-    }
-
-    public override void WriteJson(JsonWriter writer, List<Kline> value, JSONSerializer serializer) {
-        throw new NotImplementedException();
-    }
-}
-```
+The converter reads each array and instantiates the `Kline` model accordingly. `WriteJson` is not implemented because this converter is only used for deserialization.
