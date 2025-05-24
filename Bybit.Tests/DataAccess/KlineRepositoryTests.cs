@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using MyProject.DataAccess;
-using MyProject.DataAccess.Entities;
-using MyProject.DataAccess.Repositories;
+using ByBit.DataAccess;
+using ByBit.DataAccess.Entities;
+using ByBit.DataAccess.Repositories;
 using NUnit.Framework;
 
 namespace ByBit.Tests.DataAccess;
@@ -27,12 +27,12 @@ public class KlineRepositoryTests
     {
         var klines = new[]
         {
-            new KlineEntity { Symbol = "BTCUSDT", Interval = "1m", StartTime = 1, Open = 1, High = 1, Low = 1, Close = 1, Volume = 1, Turnover = 1 },
+            new KlineEntity { Symbol = "BTCUSDT", Interval = Interval.One, StartTime = 1, Open = 1, High = 1, Low = 1, Close = 1, Volume = 1, Turnover = 1 },
         };
 
         await _repository.SaveAsync(klines);
 
-        var saved = await _repository.GetAsync("BTCUSDT", "1m");
-        NUnit.Framework.Assert.That(saved, Has.Count.EqualTo(1));
+        var saved = await _repository.GetAsync("BTCUSDT", Interval.One);
+        Assert.That(saved, Has.Count.EqualTo(1));
     }
 }

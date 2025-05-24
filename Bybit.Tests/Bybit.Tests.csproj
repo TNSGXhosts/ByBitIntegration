@@ -23,7 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../ByBit/ByBit.csproj" />
-    <ProjectReference Include="../MyProject.DataAccess/MyProject.DataAccess.csproj" />
+    <ProjectReference Include="../ByBit.DataAccess/ByBit.DataAccess.csproj" />
   </ItemGroup>
 
   <ItemGroup>
