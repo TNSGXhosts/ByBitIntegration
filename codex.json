@@ -1,8 +1,0 @@
-{
-  "setupCommands": ["bash codex/setup.sh"],
-  "entrypoint": "dotnet run --project ByBit/ByBit.csproj --urls=http://0.0.0.0:5000",
-  "preview": {
-    "enabled": true,
-    "port": 5000
-  }
-}
