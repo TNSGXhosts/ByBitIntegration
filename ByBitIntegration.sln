@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyProject.Domain", "MyProje
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bybit.Tests", "Bybit.Tests\Bybit.Tests.csproj", "{C68BE130-ABE4-49D7-A12B-B3AF611ECE36}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyProject.DataAccess", "MyProject.DataAccess\MyProject.DataAccess.csproj", "{E34820E0-CECF-4581-9AD0-F33FC04B3017}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{C68BE130-ABE4-49D7-A12B-B3AF611ECE36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C68BE130-ABE4-49D7-A12B-B3AF611ECE36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C68BE130-ABE4-49D7-A12B-B3AF611ECE36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E34820E0-CECF-4581-9AD0-F33FC04B3017}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E34820E0-CECF-4581-9AD0-F33FC04B3017}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E34820E0-CECF-4581-9AD0-F33FC04B3017}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E34820E0-CECF-4581-9AD0-F33FC04B3017}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

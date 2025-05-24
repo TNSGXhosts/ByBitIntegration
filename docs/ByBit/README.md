@@ -5,6 +5,7 @@ This solution provides a lightweight integration layer over the official [`bybit
 The project is organised as a set of services that can be registered via dependency injection. All examples use the Bybit testnet URL by default.
 
 ## Features
+- Persist klines using Entity Framework Core (see `MyProject.DataAccess`)
 - Retrieve market klines (candlesticks) for inverse/USDT perpetual symbols
 - Place spot market orders
 - Query unified account balances
