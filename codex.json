@@ -1,5 +1,5 @@
 {
-  "entrypoint": "export DOTNET_ROOT=$HOME/.dotnet && export PATH=$PATH:$HOME/.dotnet && dotnet run --project ByBitIntegration.csproj --urls=http://0.0.0.0:5000",
+  "entrypoint": "dotnet run --project ByBit/ByBit.csproj --urls=http://0.0.0.0:5000",
   "preview": {
     "enabled": true,
     "port": 5000
